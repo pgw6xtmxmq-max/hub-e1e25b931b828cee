@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#07060e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="封面牆">
+  <meta name="description" content="個人使用的華語歌手專輯封面牆入口，連結五月天、王傑、周杰倫、林俊傑與孫燕姿。">
+  <title>我的華語音樂封面牆</title>
+  <style>
+:root {
+  --bg: #07060e;
+  --ink: #f6f3ff;
+  --muted: #b7b0c8;
+  --faint: #8a8399;
+  --line: rgba(255, 255, 255, 0.08);
+  --cyan: #3de7ff;
+  --magenta: #ff3d9a;
+  --gold: #ffd56a;
+  --violet: #9b7dff;
+  --font: "PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "Heiti TC", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  --radius: 22px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.55;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.stage {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(900px 520px at 8% -12%, rgba(255, 61, 154, 0.22), transparent 60%),
+    radial-gradient(820px 500px at 92% -8%, rgba(61, 231, 255, 0.16), transparent 62%),
+    radial-gradient(740px 520px at 50% 108%, rgba(155, 125, 255, 0.16), transparent 60%),
+    linear-gradient(180deg, #0c0a16 0%, var(--bg) 42%, #05040b 100%);
+}
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.11;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: calc(36px + env(safe-area-inset-top, 0px)) 0 calc(48px + env(safe-area-inset-bottom, 0px));
+}
+
+header.hero {
+  display: grid;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+.eyebrow {
+  margin: 0 0 10px;
+  letter-spacing: 0.38em;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: 0 0 16px rgba(61, 231, 255, 0.45);
+}
+.hero h1 {
+  margin: 0;
+  font-size: clamp(28px, 7vw, 54px);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  font-weight: 800;
+  background: linear-gradient(120deg, #fff 18%, var(--cyan) 52%, var(--magenta) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lede {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 34em;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.stat {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  min-width: 0;
+}
+.stat b {
+  display: block;
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+.stat span {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr;
+}
+
+.card {
+  --accent: var(--cyan);
+  --accent-2: var(--magenta);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  background: rgba(22, 19, 38, 0.72);
+  border-radius: var(--radius);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  transform: translateZ(0);
+  transition: transform 0.32s ease, box-shadow 0.32s ease;
+  animation: rise 0.7s ease both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+  -webkit-tap-highlight-color: transparent;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 55%, white 10%), transparent 42%, color-mix(in srgb, var(--accent-2) 40%, transparent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity 0.32s ease;
+}
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent),
+    0 22px 44px rgba(0, 0, 0, 0.48),
+    0 0 36px color-mix(in srgb, var(--accent) 26%, transparent);
+  outline: none;
+}
+.card:hover::before,
+.card:focus-visible::before { opacity: 1; }
+.card:active { transform: translateY(-2px) scale(0.99); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  gap: 2px;
+  aspect-ratio: 1;
+  background: #05040b;
+  overflow: hidden;
+  transform: scale(1.001);
+  transition: transform 0.55s ease;
+}
+.card:hover .mosaic,
+.card:focus-visible .mosaic {
+  transform: scale(1.045);
+}
+.mosaic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #161326;
+}
+.mosaic img.feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.mosaic img.is-missing {
+  visibility: hidden;
+}
+
+.meta {
+  position: relative;
+  z-index: 2;
+  padding: 16px 18px 18px;
+  display: grid;
+  gap: 10px;
+  background:
+    linear-gradient(180deg, rgba(12, 10, 22, 0.2), rgba(12, 10, 22, 0.55)),
+    var(--bg);
+}
+.names h2 {
+  margin: 0;
+  font-size: clamp(26px, 6vw, 34px);
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  font-weight: 800;
+}
+.names .en {
+  margin: 4px 0 0;
+  color: var(--faint);
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.facts {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.facts span {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.facts b {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  margin-right: 2px;
+}
+.facts .years {
+  color: color-mix(in srgb, var(--accent) 80%, white 10%);
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.go {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.go::after {
+  content: "→";
+  transition: transform 0.25s ease;
+}
+.card:hover .go::after,
+.card:focus-visible .go::after {
+  transform: translateX(4px);
+}
+
+footer {
+  margin-top: 36px;
+  color: var(--faint);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  header.hero {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 28px;
+    margin-bottom: 36px;
+  }
+  .stats { display: flex; justify-content: flex-end; }
+  .stat { min-width: 108px; padding: 10px 16px; }
+  .stat b { font-size: 22px; }
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .card:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(240px, 1fr);
+    align-items: stretch;
+  }
+  .card:last-child .meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 28px 32px;
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3) {
+    grid-column: span 2;
+  }
+  .card:nth-child(4),
+  .card:nth-child(5) {
+    grid-column: span 3;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:last-child .meta {
+    padding: 16px 18px 18px;
+    display: grid;
+    gap: 10px;
+    justify-content: initial;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover,
+  .card:focus-visible,
+  .card:active,
+  .mosaic,
+  .go::after {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="stage" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">PRIVATE COLLECTION</p>
+        <h1>我的華語音樂封面牆</h1>
+        <p class="lede">從封面走進專輯。點選歌手，即可打開該位歌手的專輯封面牆。</p>
+      </div>
+      <div class="stats" aria-label="收藏總覽">
+        <div class="stat"><b>5</b><span>位歌手</span></div>
+        <div class="stat"><b>138</b><span>張專輯</span></div>
+        <div class="stat"><b>2048</b><span>首歌</span></div>
+        <div class="stat"><b>1987–2026</b><span>發行年份</span></div>
+      </div>
+    </header>
+
+    <main class="grid">
+    <a class="card" href="https://pgw6xtmxmq-max.github.io/mw-3d5bd6441e030640/" style="--accent: #3de7ff; --accent-2: #ff3d9a; --i: 0" aria-label="五月天 Mayday，30 張專輯，554 首歌，1999 至 2023">
+      <div class="mosaic" style="--cols: 5; --rows: 5">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d2/08/04/d20804bd-0db9-495a-b1c7-07a8ce4a49ec/dj.wvvcuujf.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/af/c2/33/afc233f6-d570-8f22-0a91-14a3e289a30d/dj.uhlsejtl.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/a1/e8/12/a1e81253-0391-707a-828c-4f656bbe88b3/dj.dtjckmea.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/59/03/0a/59030ac6-3c18-c5f4-3770-ae08beaa2de2/dj.qlguzxkk.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/07/f2/90/mzi.xhevnauo.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/fd/ba/9e/fdba9e89-6336-d3e4-ee00-94184f9a5c2c/BD0016-_-.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/6f/aa/30/6faa3012-14d1-c18c-40b6-47a170d096a8/BD0056-_-.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/7d/43/10/7d4310fc-3583-7628-d28c-e336b664d35b/BD0055-_-.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/64/a0/f1/64a0f1b8-a36b-ff10-509a-9a8f5fef53ff/dj.zfoqlnar.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/47/57/9a/47579a13-f6e4-c5ee-d0ff-9fb9d6289c2e/25UM1IM06039.rgb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/bb/d7/f2/bbd7f270-f9b5-d9b9-382a-7b5b18963650/ROD-5306.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/70/29/40/7029402a-3537-450c-cca3-287e27c0a573/4710149684318.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/30/d8/32/30d832f1-a705-8f11-eef1-db4e110a9f5c/dj.uvamgavg.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music2/v4/a7/ad/82/a7ad82fe-1aef-4d74-80ea-52a32abc9c46/RD-1583.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/04/b9/a4/04b9a4bb-bfc6-3b8a-902a-04a6f0a4ff65/dj.clsttfvb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/0c/bc/86/0cbc8678-c5ea-6055-030a-64e7e3542679/RD-1680.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/41/7e/58/417e58c3-f5dd-633f-9f46-808b543e56e1/dj.eirxtxeb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/22/84/6d/22846d6c-8b93-ffda-6184-295dd9e341c4/10_1500_1.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/7a/a7/2a/7aa72ab3-c698-2526-7cc5-048cc427312c/BD0024-_D.N.A_LIVE.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/35/0b/0c/350b0cf5-985d-7f57-068c-62872b12c253/LiveCD_-_iTunes.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/0c/15/a3/0c15a3ea-3ac3-f472-6685-5c48c199d082/1.5.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/5e/69/79/5e697982-ef19-8014-af2f-819a4897405e/1._-.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/9c/e5/88/9ce5885a-6e67-46fc-f6e3-fcd6d2e63afb/1.mayday-2022-_4000x4000.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d9/6e/5b/d96e5b27-9d31-4ac1-1bd0-cd057ed64ace/4710616566819.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/ad/a5/84/ada5846a-1c4a-1dea-e155-44800eb702a1/BD0007-_-.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="eager" decoding="async" referrerpolicy="no-referrer" draggable="false">
+      </div>
+      <div class="meta">
+        <div class="names">
+          <h2>五月天</h2>
+          <p class="en">Mayday</p>
+        </div>
+        <p class="facts">
+          <span><b>30</b> 張專輯</span>
+          <span><b>554</b> 首歌</span>
+          <span class="years">1999–2023</span>
+        </p>
+        <span class="go" aria-hidden="true">進入封面牆</span>
+      </div>
+    </a>
+    <a class="card" href="https://pgw6xtmxmq-max.github.io/dw-dfe99db6327f90d8/" style="--accent: #ffd56a; --accent-2: #ff9b4a; --i: 1" aria-label="王傑 Dave Wang，47 張專輯，558 首歌，1987 至 2023">
+      <div class="mosaic" style="--cols: 6; --rows: 7">
+        <img class="feature" src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/61/3f/6d/613f6df3-b5a6-2670-1828-011877fc8218/mzi.bmvmzpux.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/ef/30/60/ef3060b6-5450-1ad0-6513-f72514577d68/dj.iqsarnwa.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/b2/df/1f/mzi.dbyinoxb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/0f/60/05/0f6005f7-52b0-86c0-98d5-1991237029bc/mzi.lnhhezah.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/cb/e9/e0/mzi.aoqrjiin.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/0e/0d/49/mzi.mebtiuxb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/17/d2/67/mzi.olsgerdy.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/6a/a4/f8/mzi.ketdkcmy.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/e1/9f/97/mzi.aiyojmsn.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/d9/c0/ff/mzi.dnyfouwe.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4c/bb/7d/4cbb7dd5-24fa-fc6e-79e4-905ba13e5456/mzi.ojigsjdx.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/ff/6f/82/mzi.kxnhlvra.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/d6/26/fe/mzi.ojywqpoe.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/ba/a7/ae/mzi.dgpghwyv.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/d2/30/ad/mzi.siicsknl.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/85/dd/06/mzi.ihdhnfli.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/66/d1/cb/66d1cb40-a71b-c5be-9cb1-7ab96ea6612d/EEG3003.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/1d/9c/ae/1d9cae94-e752-8135-1ec2-71d9d5270b33/EEGT3012V1.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/37/ce/f4/37cef4be-b803-6549-1250-c943c573a974/EEGT3021V2.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/00/d3/cb/00d3cb93-2ce6-2b87-272f-62366d264e59/EEGT3023V2.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/cd/48/14/cd481470-8a70-6225-a472-a918a0c23f85/EEGT3028V2.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/b9/3f/5e/b93f5ea7-79d5-bf99-1e5a-3f97971d5e96/5054197831072.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/de/62/1f/de621f68-7e7e-d2a8-2766-13c9ff1e0ee2/5054197501234.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/04/88/ae/0488aec5-31ef-7f8a-d9e1-70e8350f81f8/022925622624.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/c9/60/b6/c960b6ac-5d29-259a-8df7-36a3b8022767/dj.xtuvlbvb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/2a/26/1d/2a261d21-44b1-6d36-e0ed-9a76e1fbf0ab/090317092164.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/42/d9/88/42d98886-9822-4694-9fc9-095d21dc1792/dj.twaqyxhw.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/e4/12/0d/e4120dc9-3083-e9cf-3fc0-917c8384a586/mzi.vihdkeib.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music3/v4/39/4c/eb/394ceb7a-88aa-e187-a935-a8ac2cd6c563/dj.whtnwbkt.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/3a/f4/c3/mzi.uodpurre.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/b6/74/9b/mzi.rqvsjpsk.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/79/92/3f/79923ff9-3e6b-8b55-fe5a-fd8e685a4ce2/FCCS92091.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/2f/27/58/2f2758d9-8a38-3e4e-3a04-da361d1fa373/EEG1011.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/28/b4/59/28b459c8-505f-4fd7-9499-da483e107dc5/EEG1052V1.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/52/6e/65/526e6584-5bea-8ebf-6c8b-d84a384ab1b3/dj.pflvsyaz.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/61/25/3a/mzi.ndizqkno.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features124/v4/88/59/ad/8859ad7f-0674-02db-64fc-d9ca6ca7b813/dj.llxapdew.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/68/0a/be/680abed5-954c-5a98-fff9-7ce443f44d88/V4HttpAssetRepositoryClient-ticket.woutkvog.jpg-7433458094496136676.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/75/28/77/752877f0-bc24-680e-c288-c9b65267e217/6942219372605.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+      </div>
+      <div class="meta">
+        <div class="names">
+          <h2>王傑</h2>
+          <p class="en">Dave Wang</p>
+        </div>
+        <p class="facts">
+          <span><b>47</b> 張專輯</span>
+          <span><b>558</b> 首歌</span>
+          <span class="years">1987–2023</span>
+        </p>
+        <span class="go" aria-hidden="true">進入封面牆</span>
+      </div>
+    </a>
+    <a class="card" href="https://pgw6xtmxmq-max.github.io/jc-085f682142e7c46f/" style="--accent: #9b7dff; --accent-2: #5ad0ff; --i: 2" aria-label="周杰倫 Jay Chou，24 張專輯，354 首歌，2000 至 2026">
+      <div class="mosaic" style="--cols: 5; --rows: 5">
+        <img class="feature" src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/60/4c/f3/604cf3da-2be3-f55e-9b6d-cf0792d9d870/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/a4/f2/f0/a4f2f0d4-cc80-d1a0-7f20-a0cc842a523c/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/96/c8/a1/96c8a1d8-8077-b8a7-8600-80b2abf1fe20/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/45/8a/e4/458ae484-dc8b-5683-ce04-8d2948346462/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/29/c1/2d/29c12de6-54b4-f549-9d9f-07d8a04221ea/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/9e/35/ad/9e35ad1e-749e-75b6-0539-1e80cea1817b/JAY11.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/6a/a3/8d/6aa38da9-3fc1-427c-59a7-fcd0cf21832d/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b8/83/7f/b8837f2a-324a-f6ad-ff5a-0805e9210181/JAY.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/1b/63/9e/1b639e5b-f8ca-a6e1-8612-6396bc9ff0eb/4711448407424.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/53/2d/dd/532dddf0-87d7-b9eb-7d8b-4eb194c84252/asset.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/84/c3/57/84c3574a-3032-59c9-4f0b-de8f943c94e1/asset.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/81/83/e6/8183e6c0-7137-7009-347e-326b53cb4a3b/2000x2000pix.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/16/db/ff/16dbff09-0750-29b0-07b7-3fa44f8a556e/dj.nzqvfsza.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/58/28/f4/5828f491-62ab-61b6-25b4-23838e4f1dcf/dj.sxbqzong.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/1a/07/93/1a079307-f4a0-9998-f5a3-bcd6aadc6dd8/dj.ihfqdaey.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/47/31/e9/4731e94b-a04e-87fd-e7e4-6ab6fd11e17b/4000x4000_fa.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/9b/80/a9/9b80a982-ee39-0f58-0f30-b24835fe51f9/V4HttpAssetRepositoryClient-ticket.ywyvojgp.jpg-6583450709107994272.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/64/48/f1/6448f19e-b407-c1c1-9e18-aa5a45293be7/V4HttpAssetRepositoryClient-ticket.piuwzddv.jpg-4361441731299528635.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/fb/f9/20/fbf920ca-d0b3-1edc-bee2-91d829fe80dc/contsched.govvxdyb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/42/79/67/427967ed-3053-4927-3076-8e7a29dc3ce2/V4HttpAssetRepositoryClient-ticket.cabvfkcy.jpg-7829877703743571752.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4b/a7/57/4ba75764-ac01-f21b-66ba-8a857318ac46/opus_cover.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/38/19/b5/3819b526-82cb-318a-fca4-5867ab3b3879/Cover_TW.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+      </div>
+      <div class="meta">
+        <div class="names">
+          <h2>周杰倫</h2>
+          <p class="en">Jay Chou</p>
+        </div>
+        <p class="facts">
+          <span><b>24</b> 張專輯</span>
+          <span><b>354</b> 首歌</span>
+          <span class="years">2000–2026</span>
+        </p>
+        <span class="go" aria-hidden="true">進入封面牆</span>
+      </div>
+    </a>
+    <a class="card" href="https://pgw6xtmxmq-max.github.io/jj-2e1eedf32b258905/" style="--accent: #7cffb2; --accent-2: #3de7ff; --i: 3" aria-label="林俊傑 JJ Lin，21 張專輯，335 首歌，2003 至 2023">
+      <div class="mosaic" style="--cols: 5; --rows: 4">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/e3/1a/2a/e31a2ab5-0d70-0cd0-798c-eea5a9a39d34/dj.vcfnweod.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/9b/98/eb/9b98ebae-69b1-8009-678c-65e94124e0a8/dj.cqtiyqmo.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/48/df/ca/48dfcafb-b371-ac74-3604-006495126531/fengmian.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/eb/94/31/eb9431a3-8e83-765b-79c2-b1c8b30422eb/dj.iygachdx.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/0e/ec/2e/0eec2ed7-82cb-3ce3-4e16-65be28b69fe5/dj.gnosyuee.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/99/e8/4f/99e84f72-3c26-0617-86a7-8e3f250f8c98/fengmain.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4a/84/a2/4a84a274-3678-533c-c1e1-5fd9216b7f1d/dj.kxuxixwe.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/4f/55/6d/4f556da8-f58c-982d-6dd9-3515d33b354f/mzm.awewpcjt.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/96/9a/63/969a63f7-c84e-595d-6a0f-73bb0cfd4eae/5053105007028.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/86/80/48/86804834-eb90-62a1-2170-cd96f9963cac/4711099729722.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/57/5a/1b/575a1bc9-ca86-7549-e873-b55663ba6276/4711508105925.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3d/d8/71/3dd8711e-41ec-29ee-72b6-0a2a480031d0/4711720281483.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/d5/8c/43/d58c435f-3229-822b-70bb-c5be6a83d191/190295707569.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/5d/4c/d8/5d4cd804-fb33-1489-ae12-0848c9324a1a/190295113582.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/53/01/ca/5301cac3-425e-a155-f471-a341937daf32/4711099723225.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d5/ee/95/d5ee95ab-cffb-15a6-20d6-c71ea22ad5a8/6926105838611.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/97/b6/4f/97b64fc0-ef82-19d3-06b8-26a57b8daae2/dj.qzfbgnvr.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music49/v4/10/ea/2c/10ea2cc1-4c39-98d9-66fe-dadacd703728/28012016170559-0001.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/fc/42/92/fc429268-d9d2-6b1e-96fe-a117036316aa/dj.zgcdcjsy.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/c1/d1/1c/c1d11c55-d75d-8a43-984c-b46a1137101c/4711099716050.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+      </div>
+      <div class="meta">
+        <div class="names">
+          <h2>林俊傑</h2>
+          <p class="en">JJ Lin</p>
+        </div>
+        <p class="facts">
+          <span><b>21</b> 張專輯</span>
+          <span><b>335</b> 首歌</span>
+          <span class="years">2003–2023</span>
+        </p>
+        <span class="go" aria-hidden="true">進入封面牆</span>
+      </div>
+    </a>
+    <a class="card" href="https://pgw6xtmxmq-max.github.io/ys-3f7d1d05f9008160/" style="--accent: #ff8fb8; --accent-2: #ffd56a; --i: 4" aria-label="孫燕姿 Stefanie Sun，16 張專輯，247 首歌，2000 至 2017">
+      <div class="mosaic" style="--cols: 4; --rows: 4">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/0b/cb/70/0bcb70e1-c991-261e-eb64-be53ca569d0b/dj.kzpfbjxe.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/0f/99/a7/mzi.zsimusvk.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7b/e7/26/7be7268a-8048-fe91-9f70-e6f0ef401372/mzi.uwhxxsbl.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/29/6c/bd/296cbd76-a6f8-c0a6-9492-194ced54c952/mzi.piffsvdf.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/v4/2d/f9/4f/2df94fc4-f2ec-b472-aaeb-825d61e362fa/809274724267.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/24/fc/1d/24fc1d3e-b37f-968f-3d21-880edc8f8d79/mzi.ybwydvjn.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/8a/91/d7/8a91d731-cdb1-01b5-17a9-c88cf66d6e01/5050466855725.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/94/d7/fc/mzi.itefxkul.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/18/4d/d9/184dd9e0-5c01-13ec-eba3-2ec44a7da5e1/mzi.tftomyty.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/39/8e/7d/398e7d64-1877-03ab-17cb-460943429bc0/825646246939.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/b6/45/aa/b645aaff-ed1e-71f3-a117-dc2373bfa37f/00602488893596.rgb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/81/dc/36/81dc3656-ae44-4641-7aa4-485e48fae68b/14UMGIM00262.rgb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/11/43/34/1143346f-1d34-a812-738d-41b941c49fa3/00602567102038.rgb.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music/70/8f/21/mzi.buxkpipq.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features/v4/81/22/2d/81222d1e-8bc3-1add-1bf4-e7e7cfa79d90/dj.auwutytv.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Features2/v4/15/75/b0/1575b078-a0a3-0163-cb44-9f52f9bce868/dj.owfxutzg.jpg/400x400bb.jpg" alt="" width="400" height="400" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">
+      </div>
+      <div class="meta">
+        <div class="names">
+          <h2>孫燕姿</h2>
+          <p class="en">Stefanie Sun</p>
+        </div>
+        <p class="facts">
+          <span><b>16</b> 張專輯</span>
+          <span><b>247</b> 首歌</span>
+          <span class="years">2000–2017</span>
+        </p>
+        <span class="go" aria-hidden="true">進入封面牆</span>
+      </div>
+    </a>
+    </main>
+
+    <footer>私人收藏 · 僅供個人使用</footer>
+  </div>
+  <script>
+    document.querySelectorAll(".mosaic img").forEach(function (img) {
+      img.addEventListener("error", function () {
+        img.classList.add("is-missing");
+        img.removeAttribute("src");
+      });
+    });
+  </script>
+</body>
+</html>
